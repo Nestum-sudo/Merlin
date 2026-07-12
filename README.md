@@ -34,3 +34,4 @@ docker compose -f infra/docker-compose.yml up
 Ver `packages/db-schema/migrations/` para o esquema completo e
 `docs/` (fora deste esqueleto, nos ficheiros partilhados anteriormente) para
 o racional de cada decisão.
+# Merlin
