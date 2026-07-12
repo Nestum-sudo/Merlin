@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: merlin
+      POSTGRES_PASSWORD: merlin
+      POSTGRES_DB: merlin
+    ports:
+      - "5432:5432"
+    volumes:
+      - merlin_pg_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: ../apps/web
+    env_file:
+      - ../apps/web/.env.local
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - garmin-worker
+
+  garmin-worker:
+    build:
+      context: ../services/garmin-worker
+    env_file:
+      - ../services/garmin-worker/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+volumes:
+  merlin_pg_data:
