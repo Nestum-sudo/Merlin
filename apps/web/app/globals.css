@@ -1,0 +1,46 @@
+:root {
+  --asphalt: #14171a;
+  --asphalt-2: #1b1f23;
+  --asphalt-3: #22262b;
+  --line: #2c3136;
+  --chalk: #f1efe7;
+  --chalk-dim: #9ba3aa;
+  --hiviz: #d4ff3f;
+  --hiviz-dim: #8fa83c;
+  --rust: #c9622b;
+  --rust-dim: #8a4a26;
+  --sky: #4fa8d8;
+  --sky-dim: #3a7699;
+  --danger: #e8543f;
+  --danger-dim: #8c3628;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background: var(--asphalt);
+  color: var(--chalk);
+  font-family: "Barlow", sans-serif;
+}
+
+body {
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 34px 34px;
+  background-attachment: fixed;
+  background-position: -1px -1px;
+}
+
+::selection {
+  background: var(--hiviz);
+  color: #0a0c0d;
+}
+
+.mono {
+  font-family: "JetBrains Mono", monospace;
+}

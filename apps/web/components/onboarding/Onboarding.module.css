@@ -1,0 +1,71 @@
+.page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.wrap { width: 100%; max-width: 460px; }
+
+.brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 30px; }
+.brandMark { width: 26px; height: 26px; position: relative; border: 2px solid var(--hiviz); border-radius: 50%; }
+.brandMark::after { content: ""; position: absolute; inset: 5px; border-top: 2px solid var(--hiviz); border-right: 2px solid transparent; transform: rotate(-45deg); }
+.brandName { font-family: "Oswald"; font-weight: 600; font-size: 19px; letter-spacing: 0.06em; }
+.brandName span { color: var(--hiviz); }
+
+.checkpoints { display: flex; align-items: center; margin-bottom: 22px; padding: 0 6px; }
+.cp { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: none; }
+.cpDot { width: 11px; height: 11px; border-radius: 50%; background: var(--asphalt-3); border: 2px solid var(--line); transition: 0.25s; }
+.cpLbl { font-family: "JetBrains Mono"; font-size: 9.5px; letter-spacing: 0.06em; color: #5a6167; text-transform: uppercase; }
+.cp.done .cpDot { background: var(--hiviz); border-color: var(--hiviz); }
+.cp.done .cpLbl { color: var(--hiviz-dim); }
+.cp.active .cpDot { border-color: var(--hiviz); background: var(--asphalt); box-shadow: 0 0 0 3px rgba(212,255,63,0.15); }
+.cp.active .cpLbl { color: var(--chalk); }
+.cpLine { flex: 1; height: 2px; background: var(--line); margin: 0 4px 15px; position: relative; overflow: hidden; }
+.cpLine i { display: block; height: 100%; background: var(--hiviz-dim); transition: width 0.35s ease; }
+
+.hud { background: var(--asphalt-2); border: 1px solid var(--line); border-radius: 2px; position: relative; }
+.hud::before, .hud::after { content: ""; position: absolute; width: 10px; height: 10px; pointer-events: none; }
+.hud::before { top: -1px; left: -1px; border-top: 2px solid var(--hiviz-dim); border-left: 2px solid var(--hiviz-dim); }
+.hud::after { bottom: -1px; right: -1px; border-bottom: 2px solid var(--hiviz-dim); border-right: 2px solid var(--hiviz-dim); }
+.card { padding: 34px 30px; }
+
+.eyebrow { font-family: "JetBrains Mono"; font-size: 11px; letter-spacing: 0.1em; color: var(--chalk-dim); text-transform: uppercase; margin-bottom: 8px; }
+.h1 { font-family: "Oswald"; font-weight: 600; font-size: 24px; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.2; margin-bottom: 10px; }
+.h1Small { font-family: "Oswald"; font-weight: 600; font-size: 19px; text-transform: uppercase; }
+.sub { font-size: 14px; color: var(--chalk-dim); line-height: 1.55; margin-bottom: 26px; }
+
+.serviceRow { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.serviceIcon { width: 38px; height: 38px; border-radius: 8px; flex: none; display: flex; align-items: center; justify-content: center; font-family: "Oswald"; font-weight: 700; font-size: 15px; }
+.serviceIconStrava { background: rgba(201,98,43,0.16); color: var(--rust); border: 1px solid var(--rust-dim); }
+.serviceIconGarmin { background: rgba(79,168,216,0.14); color: var(--sky); border: 1px solid var(--sky-dim); }
+.serviceName { font-family: "Oswald"; font-size: 15px; text-transform: uppercase; letter-spacing: 0.03em; }
+.serviceTag { font-family: "JetBrains Mono"; font-size: 9.5px; color: var(--chalk-dim); letter-spacing: 0.06em; margin-top: 2px; }
+
+.btn { width: 100%; font-family: "Oswald"; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; font-size: 14px; padding: 14px; border: none; cursor: pointer; border-radius: 1px; }
+.btnPrimary { background: var(--hiviz); color: #0a0c0d; }
+.btnPrimary:disabled { background: var(--line); color: #5a6167; cursor: not-allowed; }
+.btnOutline { background: transparent; border: 1px solid var(--line); color: var(--chalk); }
+.btnGhost { background: none; border: none; color: var(--chalk-dim); font-family: "JetBrains Mono"; font-size: 12px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; letter-spacing: 0.02em; width: 100%; text-align: center; padding: 6px; }
+.btnRow { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; }
+
+.field { margin-bottom: 14px; }
+.field label { display: block; font-family: "JetBrains Mono"; font-size: 11px; color: var(--chalk-dim); letter-spacing: 0.06em; margin-bottom: 6px; }
+.field input { width: 100%; background: var(--asphalt); border: 1px solid var(--line); color: var(--chalk); padding: 11px 12px; font-family: "Barlow"; font-size: 14px; border-radius: 1px; }
+
+.assureRow { display: flex; gap: 14px; margin: 18px 0 6px; flex-wrap: wrap; }
+.assure { display: flex; align-items: center; gap: 6px; font-family: "JetBrains Mono"; font-size: 10.5px; color: var(--chalk-dim); }
+.assureIc { width: 14px; height: 14px; border: 1.5px solid var(--sky-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; color: var(--sky); flex: none; }
+
+.checkRow { display: flex; align-items: flex-start; gap: 10px; margin: 16px 0 4px; }
+.checkRow input { margin-top: 3px; accent-color: var(--hiviz); }
+.checkRow label { font-size: 12.5px; color: var(--chalk-dim); line-height: 1.5; }
+
+.connecting { display: flex; flex-direction: column; align-items: center; padding: 30px 0 10px; }
+.spin { width: 44px; height: 44px; border: 3px solid var(--line); border-top-color: var(--hiviz); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 18px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.connecting p { font-family: "JetBrains Mono"; font-size: 12px; color: var(--chalk-dim); letter-spacing: 0.04em; }
+
+.doneRow { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: var(--asphalt); border: 1px solid var(--line); border-radius: 1px; margin-bottom: 10px; }
+.doneRowStat { width: 20px; height: 20px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+.doneRow.ok .doneRowStat { background: rgba(212,255,63,0.18); color: var(--hiviz); }
+.doneRow.pending .doneRowStat { background: rgba(154,163,170,0.12); color: var(--chalk-dim); border: 1px dashed var(--line); }
+.doneRowTxt b { font-family: "Oswald"; font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.02em; display: block; }
+.doneRowTxt span { font-family: "JetBrains Mono"; font-size: 10.5px; color: var(--chalk-dim); }
+
+.bottomLink { text-align: center; margin-top: 20px; font-family: "JetBrains Mono"; font-size: 12px; color: var(--chalk-dim); }
+.errorNote { font-family: "JetBrains Mono"; font-size: 11.5px; color: var(--danger); margin-bottom: 16px; }

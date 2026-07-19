@@ -15,6 +15,10 @@ services:
       context: ../apps/web
     env_file:
       - ../apps/web/.env.local
+    environment:
+      # dentro da rede docker-compose, os serviços falam-se pelo nome do
+      # serviço, não por localhost
+      - GARMIN_WORKER_URL=http://garmin-worker:8000
     ports:
       - "3000:3000"
     depends_on:
@@ -26,6 +30,8 @@ services:
       context: ../services/garmin-worker
     env_file:
       - ../services/garmin-worker/.env
+    environment:
+      - WEB_APP_URL=http://web:3000
     ports:
       - "8000:8000"
     depends_on:
