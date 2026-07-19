@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { encrypt } from "@/lib/crypto";
 import { query } from "@/lib/db";
 
@@ -10,9 +11,15 @@ import { query } from "@/lib/db";
 // sessão na lib python-garminconnect. Assinalado no comentário da migration
 // 0002, repetido aqui para quem só vir este ficheiro.
 export async function POST(req: NextRequest) {
-  const { userId, email, password } = await req.json();
-  if (!userId || !email || !password) {
-    return NextResponse.json({ error: "userId, email ou password em falta" }, { status: 400 });
+  const session = await auth();
+  if (!session?.userId) {
+    return NextResponse.json({ error: "não autenticado" }, { status: 401 });
+  }
+  const userId = session.userId;
+
+  const { email, password } = await req.json();
+  if (!email || !password) {
+    return NextResponse.json({ error: "email ou password em falta" }, { status: 400 });
   }
 
   await query(

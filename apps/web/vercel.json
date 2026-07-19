@@ -1,0 +1,7 @@
+{
+  "crons": [
+    { "path": "/api/cron/strava-sync", "schedule": "0 */6 * * *" },
+    { "path": "/api/cron/recompute-metrics", "schedule": "0 3 * * *" },
+    { "path": "/api/cron/weekly-plan-refresh", "schedule": "0 5 * * 0" }
+  ]
+}

@@ -1,21 +1,15 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { getDashboardData } from "@/lib/dashboard-data";
 import { query } from "@/lib/db";
 import DashboardView from "@/components/dashboard/DashboardView";
 
-// TODO: substituir por auth real (ver secção "Autenticação" no README).
-// Por agora, assume o primeiro utilizador da base de dados — suficiente
-// para desenvolvimento local a solo, não para nada com mais que um
-// utilizador.
-async function getCurrentUserId(): Promise<string | null> {
-  const [row] = await query<{ id: string }>(`SELECT id FROM users ORDER BY created_at ASC LIMIT 1`);
-  return row?.id ?? null;
-}
-
 export default async function DashboardPage() {
-  const userId = await getCurrentUserId();
-  if (!userId) {
-    return <p style={{ padding: 24 }}>Sem utilizador — corre o onboarding primeiro.</p>;
+  const session = await auth();
+  if (!session?.userId) {
+    redirect("/onboarding");
   }
+  const userId = session.userId;
 
   const [data, settings] = await Promise.all([
     getDashboardData(userId),

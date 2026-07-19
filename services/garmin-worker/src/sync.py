@@ -6,12 +6,12 @@ python-garminconnect.
 
 Desde março de 2026 a Garmin bloqueia clientes HTTP não-browser com
 Cloudflare do lado deles — pedidos diretos podem começar a falhar sem
-aviso, mesmo com credenciais corretas. Isto NÃO está resolvido aqui: o
-caminho primário (abaixo) é o pedido direto via python-garminconnect; se
-começar a falhar de forma consistente, a mitigação é trocar para uma sessão
-Playwright headless (ver etweisberg/garmin-connect-mcp como referência de
-implementação) — deixado como TODO explícito em vez de fingido como
-resolvido, porque depende de como a Garmin decidir bloquear a seguir.
+aviso, mesmo com credenciais corretas. O caminho primário (abaixo) continua
+a ser o pedido direto via python-garminconnect, mais rápido e mais simples;
+se esse falhar, cai para uma sessão Playwright headless
+(playwright_fallback.py) que passa como um browser real. Ver o aviso no
+topo desse ficheiro — é uma implementação de referência, não validada
+contra o comportamento real da Garmin a partir deste ambiente.
 
 NOTA: os nomes de métodos da lib garminconnect mudam entre versões com
 alguma frequência (é uma lib não-oficial, sem contrato de API estável).
@@ -24,7 +24,7 @@ from datetime import date, timedelta
 import os
 import requests
 
-from . import db
+from . import db, playwright_fallback
 
 
 class GarminSyncError(Exception):
@@ -63,9 +63,18 @@ def _load_credentials(user_id: str):
 
 
 def _fetch_last_n_days(credentials: tuple[str, str], days: int):
-    from garminconnect import Garmin  # import local: só o worker precisa desta dependência pesada
-
     email, password = credentials
+
+    try:
+        return _fetch_via_direct_client(email, password, days)
+    except GarminSyncError:
+        # o caminho direto falhou (possível bloqueio Cloudflare) — tenta o
+        # fallback antes de desistir de vez
+        return _fetch_via_playwright(email, password, days)
+
+
+def _fetch_via_direct_client(email: str, password: str, days: int):
+    from garminconnect import Garmin  # import local: só o worker precisa desta dependência pesada
 
     try:
         client = Garmin(email, password)
@@ -74,8 +83,9 @@ def _fetch_last_n_days(credentials: tuple[str, str], days: int):
         # Cobre tanto password errada como o cenário de bloqueio Cloudflare
         # — do lado de fora, ambos parecem "login falhou". Sem um sinal
         # fiável para os distinguir na lib atual, tratamos os dois da mesma
-        # forma por agora (ver TODO no topo do ficheiro).
-        raise GarminSyncError(f"login Garmin falhou: {exc}") from exc
+        # forma: falha aqui só significa "tenta o fallback a seguir", não
+        # "credenciais definitivamente erradas".
+        raise GarminSyncError(f"login Garmin (direto) falhou: {exc}") from exc
 
     sleep_days = []
     recovery_days = []
@@ -103,6 +113,45 @@ def _fetch_last_n_days(credentials: tuple[str, str], days: int):
                 recovery_days.append(mapped)
         except Exception:  # noqa: BLE001
             continue
+
+    return sleep_days, recovery_days
+
+
+def _fetch_via_playwright(email: str, password: str, days: int):
+    # AVISO: os endpoints usados aqui (playwright_fallback.fetch_daily_sleep
+    # etc.) são pedidos diretos aos endpoints internos do Garmin Connect,
+    # não passam pela lib python-garminconnect — é bem possível que a forma
+    # do JSON devolvido não bata certo exatamente com o que _map_sleep/
+    # _map_recovery esperam (escritos a pensar na resposta já processada
+    # pela lib). Os .get() em cadeia nessas funções tornam isto seguro (não
+    # rebenta, só devolve campos None em vez de errar), mas os valores
+    # podem vir incompletos até confirmares a forma real da resposta.
+    try:
+        session = playwright_fallback.get_authenticated_session(email, password)
+        display_name = playwright_fallback.fetch_display_name(session)
+    except Exception as exc:  # noqa: BLE001
+        # aqui sim, esgotámos as duas vias — isto é que deve chegar ao
+        # cartão de erro nas Definições
+        raise GarminSyncError(f"login Garmin (fallback Playwright) falhou: {exc}") from exc
+
+    sleep_days = []
+    recovery_days = []
+    today = date.today()
+
+    for offset in range(days):
+        d = today - timedelta(days=offset)
+        d_str = d.isoformat()
+
+        raw_sleep = playwright_fallback.fetch_daily_sleep(session, display_name, d_str)
+        mapped = _map_sleep(d_str, raw_sleep)
+        if mapped:
+            sleep_days.append(mapped)
+
+        raw_hrv = playwright_fallback.fetch_daily_hrv(session, d_str)
+        raw_battery = playwright_fallback.fetch_body_battery(session, display_name, d_str)
+        mapped = _map_recovery(d_str, raw_hrv, raw_battery)
+        if mapped:
+            recovery_days.append(mapped)
 
     return sleep_days, recovery_days
 

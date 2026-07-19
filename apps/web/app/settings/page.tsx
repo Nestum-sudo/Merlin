@@ -1,7 +1,14 @@
-// Definições — contas ligadas, composição da prontidão, perfil.
-// Ver desnivel-settings.html (agora "Merlin"). O cartão do Garmin lê o
-// estado diretamente de connected_accounts (status/last_error), escrito
-// pelo garmin-worker — esta página nunca fala com o Garmin diretamente.
-export default function SettingsPage() {
-  return <main>{/* TODO: portar o mockup para componentes React */}</main>;
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { getSettingsData } from "@/lib/settings-data";
+import SettingsView from "@/components/settings/SettingsView";
+
+export default async function SettingsPage() {
+  const session = await auth();
+  if (!session?.userId) {
+    redirect("/onboarding");
+  }
+
+  const data = await getSettingsData(session.userId);
+  return <SettingsView data={data} />;
 }

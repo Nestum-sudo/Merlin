@@ -59,15 +59,15 @@ export default function DashboardView({ userId, data, athleteWeights }: Props) {
       </header>
 
       <main className={styles.main}>
-        {tab === "hoje" && <HojeTab userId={userId} data={data} athleteWeights={athleteWeights} />}
+        {tab === "hoje" && <HojeTab data={data} athleteWeights={athleteWeights} />}
         {tab === "tendencias" && <TendenciasTab data={data} />}
-        {tab === "objetivos" && <ObjetivosTab userId={userId} />}
+        {tab === "objetivos" && <ObjetivosTab />}
       </main>
     </div>
   );
 }
 
-function HojeTab({ userId, data, athleteWeights }: Props) {
+function HojeTab({ data, athleteWeights }: Omit<Props, "userId">) {
   const { today, week } = data;
   const [sliderMin, setSliderMin] = useState(today.plannedSession?.durationMin ?? 60);
   const [session, setSession] = useState<RecalcedSession | null>(
@@ -93,7 +93,7 @@ function HojeTab({ userId, data, athleteWeights }: Props) {
         const res = await fetch("/api/plan/recalc-session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId, availableMinutes: min }),
+          body: JSON.stringify({ availableMinutes: min }),
         });
         const json = await res.json();
         if (json.ok) setSession(json.session);
@@ -414,7 +414,7 @@ const HOURS_OPTIONS = [
   { value: 14, label: "12h+" },
 ];
 
-function ObjetivosTab({ userId }: { userId: string }) {
+function ObjetivosTab() {
   const [type, setType] = useState(GOAL_TYPES[0].value);
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
@@ -431,14 +431,14 @@ function ObjetivosTab({ userId }: { userId: string }) {
       const goalRes = await fetch("/api/goals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, type, eventName, eventDate: eventDate || null, priority, hoursPerWeekTarget: hours }),
+        body: JSON.stringify({ type, eventName, eventDate: eventDate || null, priority, hoursPerWeekTarget: hours }),
       });
       if (!goalRes.ok) throw new Error("falha a criar o objetivo");
 
       const planRes = await fetch("/api/plan/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({}),
       });
       const json = await planRes.json();
       if (!json.ok) throw new Error(json.error ?? "falha a gerar o plano");

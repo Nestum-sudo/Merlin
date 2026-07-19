@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { decodePolyline } from "@/lib/polyline";
 
 // Alimenta o modal de detalhe do painel (clique numa tira do dia).
 // Devolve os streams reais downsampled — não inventa curvas.
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+  const session = await auth();
+  if (!session?.userId) {
+    return NextResponse.json({ error: "não autenticado" }, { status: 401 });
+  }
+
   const [activity] = await query<{
     type: string;
     started_at: string;
@@ -17,10 +23,13 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     max_hr: number | null;
     route_polyline: string | null;
   }>(
+    // user_id no WHERE não é só filtragem — é o que impede um utilizador
+    // de ver o detalhe de uma atividade de outra pessoa só por adivinhar o
+    // UUID (o id sozinho não bastava para autorizar o acesso).
     `SELECT type, started_at, duration_s, distance_m, elevation_gain_m,
             avg_power_w, normalized_power_w, avg_hr, max_hr, route_polyline
-     FROM activities WHERE id = $1`,
-    [params.id]
+     FROM activities WHERE id = $1 AND user_id = $2`,
+    [params.id, session.userId]
   );
   if (!activity) {
     return NextResponse.json({ error: "não encontrada" }, { status: 404 });

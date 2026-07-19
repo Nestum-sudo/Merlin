@@ -3,7 +3,7 @@ import os
 from fastapi import BackgroundTasks, FastAPI, Header, HTTPException
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from . import sync
+from . import db, sync
 
 app = FastAPI(title="merlin-garmin-worker")
 
@@ -34,15 +34,25 @@ def sync_now(user_id: str, background_tasks: BackgroundTasks, authorization: str
 
 
 # Cron interno — sincroniza todos os utilizadores ligados periodicamente,
-# independentemente de o web pedir ou não. TODO: substituir o intervalo fixo
-# por leitura da lista real de connected_accounts com provider='garmin'.
+# independentemente de o web pedir ou não.
 scheduler = BackgroundScheduler()
 
 
 @scheduler.scheduled_job("interval", hours=6)
 def scheduled_sync_all():
-    # TODO: SELECT user_id FROM connected_accounts WHERE provider='garmin' AND status != 'disconnected'
-    pass
+    with db.get_connection() as conn:
+        rows = conn.execute(
+            "SELECT user_id FROM connected_accounts WHERE provider = 'garmin' AND status != 'disconnected'"
+        ).fetchall()
+
+    for (user_id,) in rows:
+        try:
+            sync.sync_user(str(user_id))
+        except Exception:  # noqa: BLE001
+            # sync_user já grava o erro em connected_accounts.last_error —
+            # aqui só evita que a falha de um utilizador impeça os
+            # seguintes de serem tentados neste ciclo
+            continue
 
 
 @app.on_event("startup")

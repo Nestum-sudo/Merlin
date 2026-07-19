@@ -1,0 +1,101 @@
+.body { padding-bottom: 80px; }
+.topbar { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 14px 22px; background: rgba(20,23,26,0.92); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+.back { display: flex; align-items: center; gap: 8px; font-family: "JetBrains Mono"; font-size: 12px; color: var(--chalk-dim); cursor: pointer; background: none; border: none; }
+.back:hover { color: var(--chalk); }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brandMark { width: 26px; height: 26px; position: relative; border: 2px solid var(--hiviz); border-radius: 50%; }
+.brandMark::after { content: ""; position: absolute; inset: 5px; border-top: 2px solid var(--hiviz); border-right: 2px solid transparent; transform: rotate(-45deg); }
+.brandName { font-family: "Oswald"; font-weight: 600; font-size: 19px; letter-spacing: 0.06em; }
+.brandName span { color: var(--hiviz); }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--asphalt-3); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-family: "JetBrains Mono"; font-size: 11px; color: var(--chalk-dim); cursor: pointer; }
+
+.main { max-width: 760px; margin: 0 auto; padding: 30px 22px; }
+.eyebrow { font-family: "JetBrains Mono"; font-size: 11px; letter-spacing: 0.12em; color: var(--chalk-dim); text-transform: uppercase; margin-bottom: 6px; }
+.pageTitle { font-family: "Oswald"; font-weight: 600; font-size: 26px; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 6px; }
+.pageSub { font-size: 14px; color: var(--chalk-dim); margin-bottom: 30px; }
+.sectionTitle { font-family: "Oswald"; font-size: 14px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--chalk-dim); margin: 34px 0 12px; display: flex; align-items: center; gap: 10px; }
+.sectionTitle::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+.hud { background: var(--asphalt-2); border: 1px solid var(--line); border-radius: 2px; position: relative; }
+.hud::before, .hud::after { content: ""; position: absolute; width: 9px; height: 9px; pointer-events: none; }
+.hud::before { top: -1px; left: -1px; border-top: 2px solid var(--hiviz-dim); border-left: 2px solid var(--hiviz-dim); }
+.hud::after { bottom: -1px; right: -1px; border-bottom: 2px solid var(--hiviz-dim); border-right: 2px solid var(--hiviz-dim); }
+
+.connCard { padding: 20px 22px; margin-bottom: 14px; }
+.connTop { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+.connId { display: flex; align-items: center; gap: 12px; }
+.connIcon { width: 40px; height: 40px; border-radius: 8px; flex: none; display: flex; align-items: center; justify-content: center; font-family: "Oswald"; font-weight: 700; font-size: 16px; }
+.connIconStrava { background: rgba(201,98,43,0.16); color: var(--rust); border: 1px solid var(--rust-dim); }
+.connIconGarmin { background: rgba(79,168,216,0.14); color: var(--sky); border: 1px solid var(--sky-dim); }
+.connName { font-family: "Oswald"; font-size: 16px; text-transform: uppercase; letter-spacing: 0.02em; }
+.connMeta { font-family: "JetBrains Mono"; font-size: 11px; color: var(--chalk-dim); margin-top: 3px; }
+
+.statusPill { font-family: "JetBrains Mono"; font-size: 10px; letter-spacing: 0.05em; padding: 4px 9px; border-radius: 2px; text-transform: uppercase; flex: none; display: flex; align-items: center; gap: 5px; }
+.statusPill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; }
+.statusOk { background: rgba(212,255,63,0.12); color: var(--hiviz); }
+.statusOk::before { background: var(--hiviz); }
+.statusError { background: rgba(232,84,63,0.12); color: var(--danger); }
+.statusError::before { background: var(--danger); }
+.statusOff { background: rgba(154,163,170,0.1); color: var(--chalk-dim); }
+.statusOff::before { background: var(--chalk-dim); }
+
+.connScope { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 7px; }
+.scopeTag { font-family: "JetBrains Mono"; font-size: 10px; color: var(--chalk-dim); border: 1px solid var(--line); padding: 4px 8px; border-radius: 2px; }
+
+.connErrorBox { margin-top: 14px; padding: 12px 14px; background: rgba(232,84,63,0.08); border: 1px solid var(--danger-dim); border-radius: 1px; display: flex; gap: 10px; align-items: flex-start; }
+.connErrorIc { width: 18px; height: 18px; flex: none; border-radius: 50%; background: var(--danger); color: #14171a; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.connErrorBox p { font-size: 12.5px; color: var(--chalk); line-height: 1.5; }
+
+.connActions { display: flex; gap: 10px; margin-top: 16px; align-items: center; flex-wrap: wrap; }
+.btn { font-family: "Oswald"; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; font-size: 12.5px; padding: 9px 16px; border: none; cursor: pointer; border-radius: 1px; }
+.btnPrimary { background: var(--hiviz); color: #0a0c0d; }
+.btnPrimary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btnOutline { background: transparent; border: 1px solid var(--line); color: var(--chalk); }
+.btnDangerText { background: none; border: none; color: var(--danger); font-family: "JetBrains Mono"; font-size: 11.5px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; letter-spacing: 0.02em; margin-left: auto; }
+
+.syncSplit { position: relative; display: flex; }
+.syncMain { border-right: none; border-radius: 1px 0 0 1px; }
+.syncCaret { padding: 9px 10px; border-radius: 0 1px 1px 0; font-size: 10px; line-height: 1; }
+.syncMenu { display: none; position: absolute; top: calc(100% + 6px); left: 0; z-index: 10; background: var(--asphalt-3); border: 1px solid var(--line); border-radius: 1px; min-width: 170px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.35); }
+.syncMenuOpen { display: block; }
+.syncMenu button { display: block; width: 100%; text-align: left; background: none; border: none; color: var(--chalk); font-family: "JetBrains Mono"; font-size: 12px; padding: 10px 14px; cursor: pointer; }
+.syncMenu button:hover { background: var(--asphalt); color: var(--hiviz); }
+.syncMenu button + button { border-top: 1px solid var(--line); }
+.syncStatus { font-family: "JetBrains Mono"; font-size: 11px; color: var(--hiviz-dim); margin-top: 10px; width: 100%; }
+
+.weightPanel { padding: 22px 24px; }
+.weightRow { margin-bottom: 22px; }
+.weightRow:last-child { margin-bottom: 0; }
+.weightHead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.weightHeadL { display: flex; align-items: center; gap: 8px; font-family: "Oswald"; font-size: 14px; text-transform: uppercase; letter-spacing: 0.02em; }
+.dot { width: 9px; height: 9px; border-radius: 2px; }
+.weightHeadV { font-family: "JetBrains Mono"; font-size: 13px; color: var(--chalk-dim); }
+input[type="range"] { -webkit-appearance: none; width: 100%; height: 3px; background: var(--line); border-radius: 2px; outline: none; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; border-radius: 2px; background: var(--hiviz); border: 2px solid var(--asphalt-2); cursor: pointer; transform: rotate(45deg); }
+.ghost { opacity: 0.55; }
+.badge { font-family: "JetBrains Mono"; font-size: 9px; color: var(--chalk-dim); border: 1px dashed var(--line); padding: 2px 7px; border-radius: 2px; margin-left: 8px; }
+
+.profilePanel { padding: 22px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field label { display: block; font-family: "JetBrains Mono"; font-size: 11px; color: var(--chalk-dim); letter-spacing: 0.06em; margin-bottom: 6px; }
+.field input { width: 100%; background: var(--asphalt); border: 1px solid var(--line); color: var(--chalk); padding: 10px 12px; font-family: "Barlow"; font-size: 14px; border-radius: 1px; }
+.full { grid-column: 1 / -1; }
+.unitToggle { display: flex; border: 1px solid var(--line); border-radius: 1px; overflow: hidden; width: fit-content; }
+.unitToggle button { font-family: "JetBrains Mono"; font-size: 12px; padding: 9px 16px; background: var(--asphalt); border: none; color: var(--chalk-dim); cursor: pointer; }
+.unitToggleActive { background: var(--asphalt-3) !important; color: var(--hiviz) !important; }
+.weightTrend { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 7px; }
+.weightTrend span { font-family: "JetBrains Mono"; font-size: 10px; color: var(--hiviz-dim); letter-spacing: 0.02em; }
+.saveBar { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+.saveNote { font-family: "JetBrains Mono"; font-size: 11px; color: var(--hiviz-dim); }
+
+.dangerPanel { padding: 20px 22px; border-color: var(--danger-dim); }
+.dangerPanel::before, .dangerPanel::after { border-color: var(--danger-dim); }
+.dangerRow { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.dangerRow:last-child { border-bottom: none; }
+.dangerRow div b { font-family: "Oswald"; font-size: 14px; text-transform: uppercase; letter-spacing: 0.02em; display: block; margin-bottom: 3px; }
+.dangerRow div span { font-size: 12.5px; color: var(--chalk-dim); }
+.btnDanger { background: transparent; border: 1px solid var(--danger-dim); color: var(--danger); font-family: "Oswald"; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; font-size: 12px; padding: 9px 14px; cursor: pointer; border-radius: 1px; flex: none; }
+
+@media (max-width: 640px) {
+  .profilePanel { grid-template-columns: 1fr; }
+  .dangerRow { flex-direction: column; align-items: flex-start; }
+}

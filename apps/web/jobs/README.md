@@ -1,15 +1,29 @@
 # Jobs agendados
 
-Definições de jobs para um runner externo (Trigger.dev, Inngest, ou cron
-simples) — não correm dentro do processo Next.js em produção.
+Implementados como rotas de API protegidas por segredo partilhado
+(`lib/cron-auth.ts`), agendadas via Vercel Cron (`vercel.json` na raiz de
+`apps/web`). Nenhum destes corre dentro do processo normal do Next.js —
+só respondem quando o scheduler os chama.
 
-- `strava-periodic-sync` — chama `syncStravaForUser` para cada utilizador
-  ligado, em vez de depender só do sync inicial no callback OAuth e do botão
-  manual nas Definições.
-- `recompute-daily-metrics` — recalcula CTL/ATL/TSB e readiness_score para
-  dias afetados por um sync novo.
-- `weekly-plan-refresh` — gera o plano da semana seguinte via lib/claude.ts.
-- Sincronização Garmin **não** vive aqui — o próprio garmin-worker tem o seu
-  cron interno (ver services/garmin-worker).
+- **`/api/cron/strava-sync`** (a cada 6h) — sync incremental para todos os
+  utilizadores com Strava ligado. Complementa o botão manual nas
+  Definições, não o substitui.
+- **`/api/cron/recompute-metrics`** (diário, 03:00) — recalcula
+  `daily_metrics` para todos os utilizadores, mesmo sem sync novo. É o que
+  garante que dias de descanso aparecem no gráfico de tendências com o
+  decaimento real de CTL/ATL, em vez de um buraco até à próxima atividade.
+- **`/api/cron/weekly-plan-refresh`** (semanal, domingo 05:00) — gera o
+  plano da semana seguinte para quem tem um objetivo futuro definido.
 
-TODO: implementar consoante a escolha final de runner de jobs.
+Sincronização Garmin **não** vive aqui — o próprio `garmin-worker` tem o
+seu cron interno (`services/garmin-worker/src/main.py`,
+`scheduled_sync_all`, a cada 6h), porque só ele tem acesso às credenciais
+desencriptadas.
+
+## A usar outro runner que não o Vercel
+
+`vercel.json` só funciona em deploy no Vercel. Para Trigger.dev, Inngest,
+ou um cron do sistema operativo, o que muda é só quem chama estas rotas —
+o handler em si (`requireCronSecret` + a lógica de cada rota) mantém-se:
+configura o runner escolhido para fazer `GET` a cada URL com o header
+`Authorization: Bearer $CRON_SECRET`, nos horários acima.
