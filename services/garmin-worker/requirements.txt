@@ -1,7 +1,17 @@
 fastapi==0.115.0
 uvicorn[standard]==0.30.0
 psycopg[binary]==3.2.0
-python-garminconnect==0.2.19
+# Nome real no PyPI é 'garminconnect', não 'python-garminconnect' (o nome
+# do repositório GitHub do cyberjunky é diferente do nome do pacote
+# publicado) — 0.2.19 nunca existiu com esse nome, daí o build ter falhado.
+# A partir da 0.3.0 (abr 2026) a lib passou a incluir bypass nativo do
+# bloqueio Cloudflare (TLS impersonation via curl_cffi, mesmo fluxo SSO
+# móvel da app oficial) — o mesmo problema que motivou o nosso fallback
+# Playwright, resolvido agora do lado da própria lib. Mantemos o fallback
+# por defesa em profundidade, mas pode já não ser necessário na prática.
+garminconnect>=0.3.3,<0.4.0
+curl_cffi>=0.7
+ua-generator>=1.0
 playwright==1.47.0
 apscheduler==3.10.4
 requests==2.32.0

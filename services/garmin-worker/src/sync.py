@@ -2,21 +2,31 @@
 
 Sem OAuth oficial: usa as credenciais do próprio utilizador (email +
 password, guardadas encriptadas em connected_accounts) através da lib
-python-garminconnect.
+`garminconnect` (nome do pacote no PyPI — o repositório GitHub chama-se
+python-garminconnect, mas o nome publicado é diferente).
 
 Desde março de 2026 a Garmin bloqueia clientes HTTP não-browser com
-Cloudflare do lado deles — pedidos diretos podem começar a falhar sem
-aviso, mesmo com credenciais corretas. O caminho primário (abaixo) continua
-a ser o pedido direto via python-garminconnect, mais rápido e mais simples;
-se esse falhar, cai para uma sessão Playwright headless
-(playwright_fallback.py) que passa como um browser real. Ver o aviso no
-topo desse ficheiro — é uma implementação de referência, não validada
-contra o comportamento real da Garmin a partir deste ambiente.
+Cloudflare do lado deles. A partir da versão 0.3.0 da lib (abril 2026),
+isso passou a estar mitigado do lado dela própria — autenticação via o
+mesmo fluxo SSO móvel da app oficial, com TLS impersonation (curl_cffi)
+para contornar o bloqueio, sem precisar de browser nenhum. Ou seja: o
+mesmo problema que motivou o fallback Playwright abaixo pode já estar
+resolvido antes de sequer lá chegarmos. Mantemos o fallback por defesa em
+profundidade (não sabemos com que frequência a Garmin muda de tática), mas
+não presumas que é sempre acionado — confirma nos logs se o caminho direto
+está a passar sem precisar dele.
+
+O caminho primário (abaixo) continua a ser o pedido direto via
+garminconnect; se esse falhar, cai para uma sessão Playwright headless
+(playwright_fallback.py). Ver o aviso no topo desse ficheiro — é uma
+implementação de referência, não validada contra o comportamento real da
+Garmin a partir deste ambiente.
 
 NOTA: os nomes de métodos da lib garminconnect mudam entre versões com
 alguma frequência (é uma lib não-oficial, sem contrato de API estável).
-Confirmar contra a versão fixada em requirements.txt antes de assumir que
-isto corre sem ajustes.
+A 0.3.0 foi uma reescrita com mudanças incompatíveis (formato de token
+diferente, dependências novas) — confirmar contra a versão fixada em
+requirements.txt antes de assumir que isto corre sem ajustes.
 """
 
 from datetime import date, timedelta

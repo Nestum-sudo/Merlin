@@ -62,6 +62,15 @@ baixo. Antes de assumir que algo funciona, confirma aqui:
   dia ou ficar como sugestão à parte.
 
 **Garmin**
+- O `requirements.txt` tinha o nome do pacote errado (`python-garminconnect`
+  em vez de `garminconnect`, o nome real no PyPI) e uma versão que já não
+  existe (`0.2.19`) — corrigido para `garminconnect>=0.3.3,<0.4.0`. A
+  versão 0.3.0 (abr 2026) passou a incluir bypass nativo do bloqueio
+  Cloudflare do lado da própria lib (TLS impersonation via `curl_cffi`,
+  mesmo fluxo SSO móvel da app oficial) — o mesmo problema que motivou o
+  fallback Playwright abaixo pode já estar mitigado antes de sequer lá
+  chegar. Vale a pena confirmar nos logs de produção com que frequência o
+  fallback é realmente acionado antes de investir mais tempo nele.
 - O fallback Playwright (`playwright_fallback.py`) está implementado como
   referência estrutural, não validado contra o comportamento real da
   Garmin — o aviso completo está no topo desse ficheiro. Antes de confiar
