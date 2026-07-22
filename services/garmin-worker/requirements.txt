@@ -1,6 +1,6 @@
 fastapi==0.115.0
 uvicorn[standard]==0.30.0
-psycopg[binary]==3.2.0
+psycopg[binary]==3.2.3
 # Nome real no PyPI é 'garminconnect', não 'python-garminconnect' (o nome
 # do repositório GitHub do cyberjunky é diferente do nome do pacote
 # publicado) — 0.2.19 nunca existiu com esse nome, daí o build ter falhado.
